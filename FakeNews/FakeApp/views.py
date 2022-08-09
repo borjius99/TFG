@@ -63,7 +63,7 @@ def principal(request):
         # Comprobar que esta conectado
         df = showNews(contract_address, abi)
         lista = df.to_html(index=False, index_names=False,
-                           classes='table table-striped', justify='center')
+                           classes='table table-striped', justify='left')
 
         return render(request, 'feed.html', context={'lista': lista})
     else:
@@ -159,7 +159,7 @@ def search_user(request):
         df['Reputacion (0-5)'] = reputation
 
         lista = df.to_html(index=False, index_names=False,
-                           classes='table table-striped', justify='center')
+                           classes='table table-striped', justify='left')
         return render(request, 'users.html', context={'lista': lista})
     except Exception as e:
         error = 'Ha ocurrido un problema al recuperar la informacion de los usuarios'

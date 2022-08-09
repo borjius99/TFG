@@ -83,17 +83,6 @@ def getAbi():
     return abi
 
 
-def show_blocks(w3):
-    latest = w3.eth.block_number
-    lista = []
-    for i in range(0, latest+1):
-        lista.append(w3.eth.get_block(i))
-    col_list = ['number', 'hash', 'gasUsed', 'difficulty']
-    df = pd.DataFrame(json_normalize(lista))
-    df = df[col_list]
-    return df
-
-
 def addOrganization(contract_address, abi, admin_address, private_key, user_address, org_name, org_source):
     w3 = connectToBlockchain()
     if w3.isConnected() is True:
@@ -216,6 +205,7 @@ def showNews(contract_address, abi):
     for i in range(0, numNews):
         lista.append(contract.functions.searchNews(100000+i).call())
     df = pd.DataFrame(lista, columns=['Id Org', 'Nombre Org', 'Id Noticia', 'Titulo', 'Editor', 'Veracidad'])
+
     return df
 
 
