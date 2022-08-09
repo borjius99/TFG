@@ -1,0 +1,96 @@
+<!doctype html>
+
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
+  <link rel="stylesheet"  href="{% static "static/css/styles.css" %}"/>
+</head>
+
+<body>
+  {% include "login.html" %}
+  <header>
+    <nav class="navbar shadow navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+          <small>FakeApp</small>
+        </a>
+
+        {% if not_deploy %}
+
+        {% else %}
+
+        <div class="d-flex align-items-center me-3">
+          {% if user.is_authenticated %}
+          {{user.org_name}}
+          <form action="{% url 'logout' %}">
+              <input type="submit" value="Logout" />
+          </form>
+
+          {% else %}
+          <button type="button" class="btn btn-primary" data-mdb-toggle='modal' data-mdb-target='#loginModal'>
+            Login
+          </button>
+          {% endif %}
+        </div>
+
+        {% endif %}
+      </div>
+
+      </header>
+
+      {% if not_deploy %}
+
+      <div class="container">
+              <div id="popup1" class="overlay">
+                  <div class="popup">
+                      <h2>Despliega el contrato</h2>
+                      <a class="close" href="#">&times;</a>
+                      <div class="content">
+                          <p>Introduce las cuentas administradoras</p>
+                          <form action="{% url 'deploy' %}" method="post">
+                              {% csrf_token %}
+                              <div class>
+                                  <div class="placeholder">
+                                      <input type="text" name="a1" id="a1" size="30" placeholder="Cuenta Nº1..." required>
+                                  </div>
+
+                                  <div class = "placeholder">
+                                      <input class="field" name="private_key" id="private_key" type="password" placeholder="Private key..." required></input>
+                                  </div>
+                              </div>
+                              <button type="submit" class="btn btn-primary">Desplegar</button>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+      </div>
+
+      {% else %}
+
+      {% endif %}
+
+      </div>
+    </nav>
+
+  {% if messages %}
+      {% for message in messages %}
+      <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+      {% endfor %}
+  {% endif %}
+
+
+  <div id="content">{% block content %} {% endblock %}</div>
+
+</body>
+
+<!-- MDB -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+
+</html>

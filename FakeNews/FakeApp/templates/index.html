@@ -1,0 +1,45 @@
+{% extends "header.html" %}
+
+
+{% block content %}
+
+{% if not_deploy %}
+
+<div class="container">
+        <div id="popup1" class="overlay">
+            <div class="popup">
+                <h2>Despliega el contrato</h2>
+                <a class="close" href="#">&times;</a>
+                <div class="content">
+                    <p>Introduce las cuentas administradoras</p>
+                    <form action="{% url 'deploy' %}" method="post">
+                        {% csrf_token %}
+                        <div class>
+                            <div class="placeholder">
+                                <input type="text" name="a1" id="a1" size="30" placeholder="Cuenta Nº1..." required>
+                            </div>
+
+                            <div class="placeholder">
+                                <input type="text" name="a3" id="a2" size="30" placeholder="Cuenta Nº2..." required>
+                            </div>
+
+                            <div class="placeholder">
+                                <input type="text" name="a3" id="a3" size="30" placeholder="Cuenta Nº3..." required>
+                            </div>
+
+                            <div class = "placeholder">
+                                <input class="field" name="private_key" id="private_key" type="password" placeholder="Private key..." required></input>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Desplegar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% else %}
+
+{% endif %}
+
+{% endblock %}

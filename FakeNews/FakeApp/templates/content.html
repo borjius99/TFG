@@ -1,0 +1,39 @@
+{% extends "header.html" %}
+
+
+{% block content %}
+
+{{content|safe}}
+
+
+
+<div class="container">
+        <div id="popup1" class="overlay">
+            <div class="popup">
+                <h2>Vota la noticia</h2>
+                <a class="close" href="#">&times;</a>
+                <div class="content">
+                    <p>Vota si crees que es fake o veridica</p>
+                    <form action="{% url 'vote' %}" method="post">
+                        {% csrf_token %}
+                        <div class>
+                            <div class>
+                                <select id="comboType" name= "comboVote"  list="typesList">
+                                      <datalist id="typesList">
+                                          <option hidden selected value="">Opciones</option>
+                                          <option value="0">Fake</option>
+                                          <option value="1">Verídica</option>
+                                      </datalist>
+                            </div>
+                            <div class = "placeholder">
+                                <input  hidden selected id="id" name= "id"  value={{ id }}>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publicar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% endblock %}

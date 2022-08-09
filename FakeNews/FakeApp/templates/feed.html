@@ -1,0 +1,89 @@
+{% extends "header.html" %}
+
+
+{% block content %}
+
+{{mensaje}}
+
+<div class=row>
+
+
+<div class="container-fluid2">
+    <div class="row" style = "height:100%">
+        <div class="col-4" >
+            <div class= "row" id ="playlist-row">
+                <div> <h5>Noticias Publicadas</h5> </div>
+            </div>
+            <div id = "playlist-dataframe" >
+                {{ lista|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div class="container-fluid2">
+    <a class="button" href="{% url 'search_user' %}">Usuarios</a>
+    </div>
+
+
+    <div class="container-fluid2">
+    <a class="button" href="#popup1">Crear Noticia</a>
+
+
+
+        <div id="popup1" class="overlay">
+            <div class="popup">
+                <h2>Crea tu noticia</h2>
+                <a class="close" href="#">&times;</a>
+                <div class="content">
+                    <p>Introduce el titulo y el contenido de tu noticia</p>
+                    <form action="{% url 'create' %}" method="post">
+                        {% csrf_token %}
+                        <div class>
+                            <div class="placeholder">
+                                <input type="text" name="title" id="title" size="30" placeholder="Titulo..." required>
+                            </div>
+
+                            <div class = "placeholder">
+                                <textarea class="input" name="contenido" id="contenido" rows="3" placeholder="Contenido..." required></textarea>
+                            </div>
+                            <div class = "placeholder">
+                                <input class="field" name="private_key" id="private_key" type="password" placeholder="Private key..." required></input>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publicar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="container-fluid2">
+    	<a class="button" href="#popup2">Leer Noticia</a>
+    </div>
+
+    <div class="container">
+        <div id="popup2" class="overlay">
+            <div class="popup">
+                <h2>Leer Noticia</h2>
+                <a class="close" href="#">&times;</a>
+                <div class="content">
+                    <p>Elige la noticia que quieres leer</p>
+                    <form action="{% url 'read' %}" method="post">
+                        {% csrf_token %}
+                        <div class = "placeholder">
+                            <textarea class="input" name="id" id="id" size="6" placeholder="ID de la noticia..." ></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Obtener</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
