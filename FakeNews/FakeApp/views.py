@@ -61,11 +61,15 @@ def principal(request):
     w3 = connectToBlockchain()
     if w3.isConnected() is True:
         # Comprobar que esta conectado
-        df = showNews(contract_address, abi)
-        lista = df.to_html(index=False, index_names=False,
-                           classes='table table-striped', justify='left')
+        try:
+            df = showNews(contract_address, abi)
+            lista = df.to_html(index=False, index_names=False,
+                               classes='table table-striped', justify='left')
 
-        return render(request, 'feed.html', context={'lista': lista})
+            return render(request, 'feed.html', context={'lista': lista})
+        except Exception as e:
+            error = 'Ha ocurrido algún problema al recuperar las noticias'
+            return render(request, 'error.html', context={'error': error})
     else:
         error = 'El servidor no está conectado a la blockchain'
         return render(request, 'error.html', context={'error': error})
@@ -147,10 +151,12 @@ def search_user(request):
     try:
         [df, numUsers] = searchUsers(contract_address, abi)
         reputation = []
-        for i in range(1, numUsers+1):
+        print(numUsers)
+        print('aqui')
+        for i in range(0, numUsers):
+            print(i)
             x = UserProfile.objects.all()
             value = x.values()[i]['reputation']
-            print(value)
             if (value < 0):
                 reputation.append(0)
             else:
@@ -169,35 +175,44 @@ def search_user(request):
 def createNews(request):
     title = request.POST.get('title')
     contenido = request.POST.get('contenido')
+    url = request.POST.get('url')
     private_key = request.POST.get('private_key')
     w3 = connectToBlockchain()
     if w3.isConnected() is True:
-        author = UserProfile.objects.get(org_name=request.user.org_name)
-        newsTitle = ''
-        if author.canPublish:
-            while title != newsTitle:
-                add = addNews(contract_address, abi, request.user.wallet, title, request.user.org_name, private_key)
-                if add:
-                    news = searchNews_byName(contract_address, abi, title)
-                    newsTitle = news[3]
-                    titleDB = ''
-                    while title != titleDB:
-                        try:
-                            news_model = News(newsId=news[2], title=title, content=contenido, author=author, legitima=news[5])
-                            news_model.save()
-                            if (author.reputation != 5):
-                                author.reputation = author.reputation + 1
-                            author.save()
-                            newDB = News.objects.get(newsId=news[2])
-                            messages.success(request, 'La noticia se ha publicado con exito')
-                        finally:
-                            titleDB = newDB.title
-                else:
-                    messages.error(request, 'Ha ocurrido algún problema al intentar publicar la noticia')
-                    return redirect('principal')
-            return redirect('principal')
+        aux = searchNews_byName(contract_address, abi, title)
+        if aux is None:
+            author = UserProfile.objects.get(org_name=request.user.org_name)
+            newsTitle = ''
+            if author.canPublish:
+                while title != newsTitle:
+                    add = addNews(contract_address, abi, request.user.wallet, title, request.user.org_name, private_key)
+                    if add:
+                        news = searchNews_byName(contract_address, abi, title)
+                        print(news)
+                        newsTitle = news[3]
+                        titleDB = ''
+                        while title != titleDB:
+                            try:
+                                news_model = News(newsId=news[2], title=title, content=contenido, url=url, author=author, legitima=news[5])
+                                news_model.save()
+                                if (author.reputation != 5):
+                                    author.reputation = author.reputation + 1
+                                author.save()
+                                newDB = News.objects.get(newsId=news[2])
+                                messages.success(request, 'La noticia se ha publicado con exito')
+                            except Exception as e:
+                                messages.error(request, 'Se ha producido un error')
+                            finally:
+                                titleDB = newDB.title
+                    else:
+                        messages.error(request, 'Ha ocurrido algún problema al intentar publicar la noticia')
+                        return redirect('principal')
+                return redirect('principal')
+            else:
+                messages.error(request, 'No tienes permiso para publicar noticias')
+                return redirect('principal')
         else:
-            messages.error(request, 'No tienes permiso para publicar noticias')
+            messages.error(request, 'Ya existe una noticia con ese nombre')
             return redirect('principal')
     else:
         error = 'El servidor no está conectado a la blockchain'
@@ -241,6 +256,9 @@ def readNews(request):
         news.save()
         newsBlock = searchNews(contract_address, abi, int(id))
         content = news.content
+        title = news.title
+        url = news.url
+        orgName = news.author
         now = datetime.now()
         res = news.created + timedelta(hours=6)
         if ((pytz.utc.localize(now) >= res) and (news.visualizations >= 10)):
@@ -276,8 +294,26 @@ def readNews(request):
                     error = 'Ha ocurrido algún error al modificar la reputación del autor'
                     return render(request, 'error.html', context={'error': error})
 
-        return render(request, 'content.html', context={'content': content, 'id': id})
+        return render(request, 'content.html', context={'content': content, 'url': url, 'org_name': orgName, 'id': id, 'title': title})
 
     except Exception as e:
         error = 'Ha ocurrido algún error al recuperar la noticia o no existe dicha noticia'
+        return render(request, 'error.html', context={'error': error})
+
+
+def profile(request):
+    id = request.POST.get('id')
+    w3 = connectToBlockchain()
+    if w3.isConnected() is True:
+        try:
+            author = UserProfile.objects.get(orgId=int(id))
+            df = searchOrgNews(contract_address, abi, int(id))
+            lista = df.to_html(index=False, index_names=False,
+                               classes='table table-striped', justify='left')
+            return render(request, 'profile.html', context={'lista': lista, 'source': author.org_source, 'name': author.org_name})
+        except Exception as e:
+            messages.error(request, 'No existe usuario con ese ID')
+            return redirect('search_user')
+    else:
+        error = 'El servidor no está conectado a la blockchain'
         return render(request, 'error.html', context={'error': error})

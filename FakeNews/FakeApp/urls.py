@@ -13,5 +13,6 @@ urlpatterns = [
     re_path(r'users/$', views.search_user, name='search_user'),
     re_path(r'createNews/$', views.createNews, name='create'),
     re_path(r'vote/$', views.voteNews, name='vote'),
-    re_path(r'newsContent/$', views.readNews, name='read')
+    re_path(r'newsContent/$', views.readNews, name='read'),
+    re_path(r'profile/$', views.profile, name='profile')
 ]

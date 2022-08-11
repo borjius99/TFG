@@ -3,37 +3,57 @@
 
 {% block content %}
 
-{{content|safe}}
-
-
-
-<div class="container">
-        <div id="popup1" class="overlay">
-            <div class="popup">
-                <h2>Vota la noticia</h2>
-                <a class="close" href="#">&times;</a>
-                <div class="content">
-                    <p>Vota si crees que es fake o veridica</p>
-                    <form action="{% url 'vote' %}" method="post">
-                        {% csrf_token %}
-                        <div class>
-                            <div class>
-                                <select id="comboType" name= "comboVote"  list="typesList">
-                                      <datalist id="typesList">
-                                          <option hidden selected value="">Opciones</option>
-                                          <option value="0">Fake</option>
-                                          <option value="1">Verídica</option>
-                                      </datalist>
-                            </div>
-                            <div class = "placeholder">
-                                <input  hidden selected id="id" name= "id"  value={{ id }}>
-                            </div>
+<div class="main">
+    <div class="container-fluid">
+            <div class="row" style = "height:100%">
+                <div class="col-2" style="margin-left:20px">
+                    <h5>Autor</h5>{{org_name|safe}}
+                </div>
+                <div class="col-2" style="margin-left:-40px">
+                    <h5>Enlace</h5><a href={{ url }} >{{url}}</a>
+                </div>
+                <div class="col-5">
+                    <div class="col-1">
+                        <h5>Votar</h5>
+                        <div class="row" style = "width:1000%">
+                        <h12> Una vez se haya leído la noticia, elige si crees que es "Verídica" o "Falsa".</h12>
                         </div>
-                        <button type="submit" class="btn btn-primary">Publicar</button>
-                    </form>
+                    </div>
+                    <div class="col-1" style="margin-top:10px">
+                        <form action="{% url 'vote' %}" method="post">
+                            {% csrf_token %}
+                            <div class>
+                                <div class>
+                                    <select id="comboType" name= "comboVote"  list="typesList">
+                                          <datalist id="typesList">
+                                              <option hidden selected value="">Opciones</option>
+                                              <option value="0">Falsa</option>
+                                              <option value="1">Verídica</option>
+                                          </datalist>
+                                </div>
+                                <div class = "placeholder">
+                                    <input  hidden selected id="id" name= "id"  value={{ id }}>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Votar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+    </div>
+    <div class="container-fluid">
+            <div class="row" style="width:100%">
+                <div class= "row" id ="playlist-row" style="text-align:left;margin-left:4px">
+                    <div class="col-2">
+                        <h5>{{title}}</h5>
+                    </div>
+                </div>
+                <div id = "playlists-dataframe" style="overflow-y:hidden" >
+                    {{content|safe}}
+                </div>
+            </div>
+    </div>
 </div>
+
 
 {% endblock %}

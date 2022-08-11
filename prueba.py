@@ -6,9 +6,9 @@ import pandas as pd
 from pandas import json_normalize
 
 
-admin_address = '0x6fe59F29b094b4C7845267A2d130Ad584E4Db4FA'
-contract_address = '0x2b17f7339DeCbAC7bfd62c73722A06Aa04601339'
 private_key = '0x5b371b16a0877fd36b94186199b0a3a21babc557494d912da9120a589eee2884'
+admin_address = '0x6fe59F29b094b4C7845267A2d130Ad584E4Db4FA'
+contract_address = '0x6C1C91FD998E4C5CDba63c628d80f2563348b6c1'
 
 
 def connectToBlockchain():
@@ -93,7 +93,11 @@ def getAbi():
 abi = getAbi()
 
 w3 = connectToBlockchain()
+contract = w3.eth.contract(address=contract_address, abi=abi)
+numUsers = contract.functions.returnORGarraywithNews(0).call()
+print(numUsers)
+lista = []
+for i in numUsers:
+    lista.append(contract.functions.searchNews(i).call())
 
-[a3, a2] = pushContract(private_key, admin_address)
-
-print(a3)
+print(lista)

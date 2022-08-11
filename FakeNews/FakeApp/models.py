@@ -74,6 +74,7 @@ class News(models.Model):
     newsId = models.IntegerField(unique=True)
     title = models.CharField(max_length=50)
     content = models.TextField()
+    url = models.URLField(max_length=200, default='')
     created = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     votosPositivos = models.IntegerField(default=0)

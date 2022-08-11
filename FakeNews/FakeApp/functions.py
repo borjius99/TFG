@@ -128,7 +128,7 @@ def searchUsers(contract_address, abi):
     for i in range(0, numUsers):
         lista.append(contract.functions.searchORG(i).call())
 
-    df = pd.DataFrame(lista, columns=['Address', 'Id', 'Nombre', 'Web', 'Puede publicar'])
+    df = pd.DataFrame(lista, columns=['Address', 'ID', 'Nombre', 'Web', 'Puede publicar'])
     return df, numUsers
 
 
@@ -151,7 +151,7 @@ def searchNews_byName(contract_address, abi, title):
     for i in range(100000, 100000+numNews):
         news = contract.functions.searchNews(i).call()
         if news[3] == title:
-            return news
+            return news, True
 
 
 def searchOrg_byAddress(contract_address, abi, address):
@@ -204,7 +204,7 @@ def showNews(contract_address, abi):
     lista = []
     for i in range(0, numNews):
         lista.append(contract.functions.searchNews(100000+i).call())
-    df = pd.DataFrame(lista, columns=['Id Org', 'Nombre Org', 'Id Noticia', 'Titulo', 'Editor', 'Veracidad'])
+    df = pd.DataFrame(lista, columns=['ID Organización', 'Nombre Organización', 'ID Noticia', 'Titulo', 'Editor', 'Veracidad'])
 
     return df
 
@@ -223,3 +223,15 @@ def hasVoted(id, voters):
         if y["voters"][i] == id:
             return True
     return False
+
+
+def searchOrgNews(contract_address, abi, orgID):
+    w3 = connectToBlockchain()
+    contract = w3.eth.contract(address=contract_address, abi=abi)
+    array = contract.functions.returnORGarraywithNews(orgID).call()
+    lista = []
+    for i in array:
+        lista.append(contract.functions.searchNews(i).call())
+    df = pd.DataFrame(lista, columns=['ID Organización', 'Nombre Organización', 'ID Noticia', 'Titulo', 'Editor', 'Veracidad'])
+
+    return df

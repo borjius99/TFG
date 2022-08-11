@@ -3,16 +3,34 @@
 
 {% block content %}
 
-{{mensaje}}
 
 <div class="main">
+
+
+    <div class = "d-flex">
+        <div class="p-2">
+            <form action="{% url 'profile' %}" method="post">
+                {% csrf_token %}
+                <div class="col-md-3" style="margin-left:25px;width:100%">
+                    <h5>Buscar Usuario</h5>
+                    <div class = "placeholder">
+                        <input type="text" name="id" id="ud" size="10" placeholder="Inserte ID..." required>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary" style="margin-left:25px;margin-top:5px">Obtener</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
     <div class="container-fluid">
         <div class ="row">
-            <div class = "col-13" style="margin-top:0px">
-                <div class= "row" id ="playlist-row" style="margin-top:0px;">
+            <div class = "col-13">
+                <div class= "row" id ="playlist-row" style="margin-top:0px;height:5%;text-align:center">
                     <h4>Usuarios</h4>
                 </div>
-                <div id = "playlists-dataframe" style="height:100%" >
+                <div id = "playlists-dataframe" style="height:80%" >
                     {{ lista|safe }}
                 </div>
             </div>
@@ -22,3 +40,22 @@
 
 
 {% endblock %}
+
+<!--
+<div class = "col-3" style="margin-top:50px">
+    <div class = "col-md-6">
+        <form action="{% url 'profile' %}" method="post">
+            {% csrf_token %}
+            <div class="col-md-3">
+                <div class = "placeholder">
+                    <textarea class="input" name="id" id="id" size="6" placeholder="ID del usuario.." ></textarea>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary" style="margin-left:70px;margin-top:-100px">Obtener</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+-->

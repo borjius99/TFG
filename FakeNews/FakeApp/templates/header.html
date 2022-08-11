@@ -19,7 +19,7 @@
     <nav class="navbar shadow navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
-          <small>FakeApp</small>
+          <medium>FakeApp</medium>
         </a>
 
         {% if not_deploy %}
@@ -28,16 +28,27 @@
 
         <div class="d-flex align-items-center me-3">
           {% if user.is_authenticated %}
-          {{user.org_name}}
-          <form action="{% url 'logout' %}">
-              <input type="submit" value="Logout" />
+          <form action="{% url 'profile' %}" method="post">
+              {% csrf_token %}
+              <div class>
+                  <div class = "placeholder">
+                      <input  hidden selected id="id" name= "id"  value={{user.orgId}}>
+                  </div>
+              </div>
+              <button type="submit" class="bi bi-person-fill align-middle">{{user.org_name}}</button>
           </form>
+          <div class="col-2" style="margin-left:10px">
+              <form action="{% url 'logout' %}">
+                  <button type="submit" class="btn btn-primary" style="background:#F31E1E">Logout</button>
+              </form>
 
-          {% else %}
-          <button type="button" class="btn btn-primary" data-mdb-toggle='modal' data-mdb-target='#loginModal'>
-            Login
-          </button>
-          {% endif %}
+              {% else %}
+              <button type="button" class="btn btn-primary" data-mdb-toggle='modal' data-mdb-target='#loginModal'>
+                Login
+              </button>
+              {% endif %}
+          </div>
+
         </div>
 
         {% endif %}
@@ -81,7 +92,11 @@
 
   {% if messages %}
       {% for message in messages %}
-      <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+      <div{% if message.tags %} class="{{ message.tags }}"style="height:27px"{% endif %}>
+        <div class="col-2" style="width:100%;text-align:center">
+        <h5><strong style="margin-top:5px">{{ message }}</strong></h5>
+        </div>
+    </div>
       {% endfor %}
   {% endif %}
 

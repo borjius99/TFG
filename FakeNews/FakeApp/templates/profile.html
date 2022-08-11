@@ -1,0 +1,31 @@
+{% extends "header.html" %}
+
+
+{% block content %}
+
+<div class="main">
+    <div class="container-fluid">
+            <div class="row" style="width:100%">
+                <div class="col-2" style="margin-left:20px">
+                    <h5>Página Web</h5><a href={{ source }} >{{source}}</a>
+                </div>
+                <div class="col-2" style="margin-left:-130px">
+                    <h5>Organización</h5>{{name}}
+                </div>
+                <div class ="row" style="height:50%">
+                    <div class = "col-13" style="margin-top:-100px">
+                        <div class="row" id="playlist-row" yle="width:90%;margin-top:60px">
+                            <h5>Noticias</h5>
+                        </div>
+                        <div id = "playlists-dataframe" style="height:50%">
+                            {{ lista|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
