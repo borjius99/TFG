@@ -151,10 +151,7 @@ def search_user(request):
     try:
         [df, numUsers] = searchUsers(contract_address, abi)
         reputation = []
-        print(numUsers)
-        print('aqui')
         for i in range(0, numUsers):
-            print(i)
             x = UserProfile.objects.all()
             value = x.values()[i]['reputation']
             if (value < 0):
@@ -188,7 +185,6 @@ def createNews(request):
                     add = addNews(contract_address, abi, request.user.wallet, title, request.user.org_name, private_key)
                     if add:
                         news = searchNews_byName(contract_address, abi, title)
-                        print(news)
                         newsTitle = news[3]
                         titleDB = ''
                         while title != titleDB:
@@ -199,7 +195,7 @@ def createNews(request):
                                     author.reputation = author.reputation + 1
                                 author.save()
                                 newDB = News.objects.get(newsId=news[2])
-                                messages.success(request, 'La noticia se ha publicado con exito')
+                                messages.success(request, 'La noticia se ha creado con éxito')
                             except Exception as e:
                                 messages.error(request, 'Se ha producido un error')
                             finally:

@@ -148,3 +148,7 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
     width: 100%;
 
 }
+
+a:visited {
+  color: green;
+}

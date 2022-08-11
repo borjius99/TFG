@@ -19,8 +19,10 @@
     <nav class="navbar shadow navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
-          <medium>FakeApp</medium>
+          <medium>   FakeApp</medium>
         </a>
+
+        <img src="https://st.depositphotos.com/1186248/2404/i/950/depositphotos_24043595-stock-photo-fake-rubber-stamp.jpg" style="height:60px;width:85px">
 
         {% if not_deploy %}
 
@@ -84,7 +86,44 @@
       </div>
 
       {% else %}
+        {% if user.is_authenticated %}
+        {% else %}
+            <div class="row" style="width:80%">
+                <div class="row" style="margin-top:30px;margin-left:30px">
+                    <h3><strong>Fake News</strong></h3>
+                </div>
+                <div class="row" style="margin-top:30px;margin-left:40px">
+                    <div class="col-7">
+                        <text>
+                            Las <strong>Fake News</strong> o noticias falsas, son noticias, historias, artículos, etc. engañosas, creadas para desinformar deliberadamente<br/>
+                             o engañar al lector. Normalmente, las fake news suelen utilizarse para influir en las opiniones de los usuarios, marcar la agenda política
+                              o generar desinformación, entre otros propósitos. Normalmente suelen ser noticias de impacto, susceptibles de ser viralizadas antes de ser contrastadas,
+                              de ese modo logran extenderse de forma rápida, siendo difíciles de detener una vez identificadas. A pesar de que en la actualidad el público está concienciado
+                              sobre este tipo de noticias, su evolución no cesa y continúa expandiéndose en forma de datos, imágenes e incluso vídeos.
+                        </text>
+                    </div>
+                    <div class="col-3">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz_O30uzd0hByJ5pGi3bUMPBGbqGtjwucAbg&usqp=CAU" style=" border: 3px solid black;border-radius: 10px;overflow-x:hidden">
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px;margin-left:30px">
+                    <h3><strong>Proyectos</strong></h3>
+                </div>
+                <div class="row" style="margin-top:30px;margin-left:40px">
+                    <h5><strong>Maldita</strong></h5>
+                    <h7>   <a href="https://maldita.es/" ><strong>Maldita.es</strong></a> es un medio de comunicación español constituido
+                        como fundación</br> sin ánimo de lucro dedicado al fact checking.
+                        Su finalidad es dotar a los ciudadanos de «herramientas para que no te la cuelen».</h7>
+                    <h5></h5>
+                    <h5></h5>
 
+                    <h5><strong>Newtral</strong></h5>
+                    <h7><strong><a href="https://www.newtral.es/">Newtral.es</a></strong> es una media startup fundada en enero de 2018 por
+                        la periodista Ana Pastor,</br> que es su única accionista: ninguna otra persona,
+                        compañía u organización empresarial forma parte de su accionariado.</h7>
+                </div>
+            </div>
+        {% endif %}
       {% endif %}
 
       </div>

@@ -90,7 +90,6 @@ def addOrganization(contract_address, abi, admin_address, private_key, user_addr
             nonce = w3.eth.getTransactionCount(admin_address)
             chain_id = 1337
             contract = w3.eth.contract(address=contract_address, abi=abi)
-            print('aqui')
             ejemplo = contract.functions.addOrganization(user_address, org_name, org_source).buildTransaction({"chainId": chain_id, "from": admin_address, "gasPrice": w3.eth.gas_price, "nonce": nonce})
             sign_ejemplo = w3.eth.account.sign_transaction(
                 ejemplo, private_key=private_key)
@@ -158,10 +157,8 @@ def searchOrg_byAddress(contract_address, abi, address):
     w3 = connectToBlockchain()
     contract = w3.eth.contract(address=contract_address, abi=abi)
     numOrgs = contract.functions.getOrgRecordsCount().call()
-    print(numOrgs)
     for i in range(numOrgs):
         orgs = contract.functions.searchORG(i).call()
-        print(orgs)
         if orgs[0] == address:
             return orgs
 
