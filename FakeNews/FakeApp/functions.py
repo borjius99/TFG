@@ -59,13 +59,10 @@ def pushContract(private_key, a1):
     )
     # Sign the transaction
     sign_transaction = w3.eth.account.sign_transaction(transaction, private_key=private_key)
-    print("Deploying Contract!")
     # Send the transaction
     transaction_hash = w3.eth.send_raw_transaction(sign_transaction.rawTransaction)
     # Wait for the transaction to be mined, and get the transaction receipt
-    print("Waiting for transaction to finish...")
     transaction_receipt = w3.eth.wait_for_transaction_receipt(transaction_hash)
-    print(f"Done! Contract deployed to {transaction_receipt.contractAddress}")
 
     contract_address = transaction_receipt.contractAddress
 
@@ -150,7 +147,7 @@ def searchNews_byName(contract_address, abi, title):
     for i in range(100000, 100000+numNews):
         news = contract.functions.searchNews(i).call()
         if news[3] == title:
-            return news, True
+            return news
 
 
 def searchOrg_byAddress(contract_address, abi, address):
@@ -182,16 +179,17 @@ def revokeStatus(contract_address, admin_address, abi, wallet, private_key):
 
 def revokeNewsStatus(contract_address, admin_address, abi, id, private_key):
     w3 = connectToBlockchain()
-
-    contract = w3.eth.contract(address=contract_address, abi=abi)
-    nonce = w3.eth.getTransactionCount(admin_address)
-    chain_id = 1337
-    revoke = contract.functions.changeStatusofNews(id, False).buildTransaction({"chainId": chain_id, "from": admin_address, "gasPrice": w3.eth.gas_price, "nonce": nonce})
-    sign_revoke = w3.eth.account.sign_transaction(revoke, private_key=private_key)
-    send_store_contact = w3.eth.send_raw_transaction(sign_revoke.rawTransaction)
-    transaction_receipt = w3.eth.wait_for_transaction_receipt(send_store_contact)
-
-    return True
+    try:
+        contract = w3.eth.contract(address=contract_address, abi=abi)
+        nonce = w3.eth.getTransactionCount(admin_address)
+        chain_id = 1337
+        revoke = contract.functions.changeStatusofNews(id, False).buildTransaction({"chainId": chain_id, "from": admin_address, "gasPrice": w3.eth.gas_price, "nonce": nonce})
+        sign_revoke = w3.eth.account.sign_transaction(revoke, private_key=private_key)
+        send_store_contact = w3.eth.send_raw_transaction(sign_revoke.rawTransaction)
+        transaction_receipt = w3.eth.wait_for_transaction_receipt(send_store_contact)
+        return True
+    except Exception as e:
+        return False
 
 
 def showNews(contract_address, abi):

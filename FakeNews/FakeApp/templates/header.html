@@ -58,31 +58,26 @@
 
       </header>
 
+      {% if messages %}
+          {% for message in messages %}
+          <div{% if message.tags %} class="{{ message.tags }}"style="height:27px"{% endif %}>
+            <div class="col-2" style="width:100%;text-align:center">
+            <h5><strong style="margin-top:5px">{{ message }}</strong></h5>
+            </div>
+        </div>
+          {% endfor %}
+      {% endif %}
+
       {% if not_deploy %}
 
       <div class="container">
-              <div id="popup1" class="overlay">
-                  <div class="popup">
-                      <h2>Despliega el contrato</h2>
-                      <a class="close" href="#">&times;</a>
-                      <div class="content">
-                          <p>Introduce las cuentas administradoras</p>
-                          <form action="{% url 'deploy' %}" method="post">
-                              {% csrf_token %}
-                              <div class>
-                                  <div class="placeholder">
-                                      <input type="text" name="a1" id="a1" size="30" placeholder="Cuenta Nº1..." required>
-                                  </div>
+          <div class="row" style="text-align:left;margin-left:40%;margin-top:30px ;width:40%">
+                  <form action="{% url 'deploy' %}" method="post">
+                      {% csrf_token %}
 
-                                  <div class = "placeholder">
-                                      <input class="field" name="private_key" id="private_key" type="password" placeholder="Private key..." required></input>
-                                  </div>
-                              </div>
-                              <button type="submit" class="btn btn-primary">Desplegar</button>
-                          </form>
-                      </div>
-                  </div>
-              </div>
+                      <button type="submit" class="btn btn-primary" style="margin-top:5px">Desplegar contrato</button>
+                  </form>
+          </div>
       </div>
 
       {% else %}
@@ -103,7 +98,7 @@
                         </text>
                     </div>
                     <div class="col-3">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz_O30uzd0hByJ5pGi3bUMPBGbqGtjwucAbg&usqp=CAU" style=" border: 3px solid black;border-radius: 10px;overflow-x:hidden">
+                        <!--<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz_O30uzd0hByJ5pGi3bUMPBGbqGtjwucAbg&usqp=CAU" style="margin-left: 150px;border: 3px solid black;border-radius: 10px;overflow-x:hidden">-->
                     </div>
                 </div>
                 <div class="row" style="margin-top:30px;margin-left:30px">
@@ -128,18 +123,6 @@
 
       </div>
     </nav>
-
-  {% if messages %}
-      {% for message in messages %}
-      <div{% if message.tags %} class="{{ message.tags }}"style="height:27px"{% endif %}>
-        <div class="col-2" style="width:100%;text-align:center">
-        <h5><strong style="margin-top:5px">{{ message }}</strong></h5>
-        </div>
-    </div>
-      {% endfor %}
-  {% endif %}
-
-
   <div id="content">{% block content %} {% endblock %}</div>
 
 </body>

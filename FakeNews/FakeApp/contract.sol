@@ -20,11 +20,8 @@ contract owned {
 
 contract fightFakeNews is owned{
 
-    string public client = "A Decentralized App for fighting fake news";
     uint public sizeORG;
     uint public sizeRealNews;
-    address public owner2;
-    address public owner3;
     uint public gasfee;
     uint newsIDstart;
     uint orgIDstart;
@@ -61,7 +58,6 @@ contract fightFakeNews is owned{
     // add organizations
 
     function addOrganization(address _orgAddress, string _organizationName, string _orgsource) public payable returns(uint) {
-        require(msg.sender==owner);
         require(msg.value==gasfee * 10 ** 15);
         sizeORG = organizationsRecords.length++;
         uint orgIDn;
@@ -184,14 +180,6 @@ contract fightFakeNews is owned{
         }
     organizationsRecords[index].status=_revokestatus;
 
-    }
-
-
-    //chnage Gas fee
-
-        function changeGasFee(uint _gasfee) public payable{
-            require(msg.sender==owner);
-            gasfee = _gasfee;
     }
 
 }

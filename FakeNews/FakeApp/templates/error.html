@@ -1,27 +1,24 @@
-<!doctype html>
-<html lang="es">
-
-<head>
-  <meta charset="utf-8">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-  <!-- MDB -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
-</head>
+{% extends "header.html" %}
 
 
-<header>
-  <nav class="navbar shadow navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">
-        <small>FakeApp</small>
-      </a>
+{% block content %}
 
-  </div>
 
- </header>
-{{error}}
+<div class="main">
+    <div class="container-fluid" >
+            <div class="row">
+                <h2></br></br></h2>
+            </div>
+            <div class="row" style="width:100%;text-align:center;margin-left:-65px">
+                <h2 style="color:red"><strong>¡ERROR!</strong></h2>
+                <div class="col-13" style="align:center">
+                    <h5></br></h5>
+                    <h4 style="color: grey;margin-left:25px"><strong>{{error}}</strong></h4>
+                </div>
+            </div>
+    </div>
+</div>
 
-</html>
+
+
+{% endblock %}

@@ -23,12 +23,15 @@
                                                    <div class="placeholder">
                                                        <input type="text" name="title" id="title" size="30" placeholder="Título..." required>
                                                    </div>
-
                                                    <div class = "placeholder" style="margin-top:2px">
                                                        <textarea class="input" name="contenido" id="contenido" rows="5" placeholder="Contenido..." required></textarea>
                                                    </div>
                                                    <div class = "placeholder" style="margin-top:-6px">
-                                                       <input type="text" name="url" id="url" size="50" placeholder="URL..." required>
+                                                       <input type="text" name="url" id="url" size="45" placeholder="URL...Ejemplo: https://www.google.es" required>
+
+                                                   </div>
+                                                   <div class = "placeholder" style="margin-top:2px">
+                                                       <input type="text" name="editor" id="editor" size="20" placeholder="Editor..." required>
 
                                                    </div>
                                                    <div class = "placeholder" style="margin-top:2px">
@@ -54,33 +57,32 @@
                 </div>
             </div>
 
-            <div class ="row" style="height:50%">
+            <div class ="row" style="height:40%">
                 <div class = "col-13" style="margin-top:0px">
                     <div class= "row" id ="playlist-row" style="margin-top:-10px;">
                         <h4>Noticias Publicadas</h4>
                     </div>
-                    <div class= "row" style="height:50%">
-
-                        <div id = "playlists-dataframe" style="height:70%;width:100%" >
-                            {{ lista|safe }}
+                    <div class= "row">
+                        <div class= "row"style="height:550px">
+                            <div id = "playlists-dataframe" style="width:100%" >
+                                {{ lista|safe }}
+                            </div>
                         </div>
-                        <div class = "row" id="gridrow" style="margin-top:-60px">
-                            <div class = "col-md-6" style="margin-top:30px;margin-left:20px">
-                                <a class="btn btn-primary" href="#popup2">Leer Noticia</a>
-                                <div id="popup2" class="overlay">
-                                    <div class="popup">
-                                        <h2>Leer Noticia</h2>
-                                        <a class="close" href="#">&times;</a>
-                                        <div class="content">
-                                            <p>Elige la noticia que quieres leer</p>
-                                            <form action="{% url 'read' %}" method="post">
-                                                {% csrf_token %}
-                                                <div class = "placeholder">
-                                                    <input type="text" name="id" id="id" size="15" placeholder="ID de la noticia..." required>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary" style="margin-top:4px">Obtener</button>
-                                            </form>
-                                        </div>
+                        <div class="col-md-6" style="margin-top:-100px;margin-left:20px;overflow-y:hidden">
+                            <a class="btn btn-primary" href="#popup2" style="height:40%">Leer Noticia</a>
+                            <div id="popup2" class="overlay">
+                                <div class="popup">
+                                    <h2>Leer Noticia</h2>
+                                    <a class="close" href="#">&times;</a>
+                                    <div class="content">
+                                        <p>Elige la noticia que quieres leer</p>
+                                        <form action="{% url 'read' %}" method="post">
+                                            {% csrf_token %}
+                                            <div class = "placeholder">
+                                                <input type="text" name="id" id="id" size="15" placeholder="ID de la noticia..." required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" style="margin-top:4px">Obtener</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

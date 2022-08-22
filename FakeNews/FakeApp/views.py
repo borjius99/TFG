@@ -41,11 +41,9 @@ def index(request):
 def deploy_Contract(request):
     w3 = connectToBlockchain()
 
-    a1 = request.POST.get('a1')
-    pk = request.POST.get('private_key')
+    a1 = admin_address
+    pk = private_key
     if w3.isAddress(a1):
-        global private_key
-        private_key = pk
         [address, abi1] = pushContract(pk, a1)
         global abi
         abi = abi1
@@ -104,6 +102,12 @@ def signup_view(request):
             org_name = signup_form.cleaned_data.get('org_name')
             org_source = signup_form.cleaned_data.get('org_source')
             wallet = signup_form.cleaned_data.get('wallet')
+            if UserProfile.objects.filter(email=email).exists() is True:
+                messages.error(request, 'Hay una cuenta existente con ese email')
+                return redirect('principal')
+            if UserProfile.objects.filter(wallet=wallet).exists() is True:
+                messages.error(request, 'Hay una cuenta existente con esa Wallet')
+                return redirect('principal')
             if w3.isAddress(wallet) is not True:
                 messages.error(request, 'El wallet introducido es inválido')
                 return redirect(index)
@@ -129,8 +133,10 @@ def signup_view(request):
                                 )
                                 userDb = UserProfile.objects.get(wallet=walletOrg)
                                 messages.success(request, 'Se ha completado el registro con éxito')
-                            finally:
                                 walletDb = userDb.wallet
+                            except Exception as e:
+                                messages.error(request, 'Se ha producido un error en el registro')
+                                return redirect('principal')
                     else:
                         messages.error(request, 'No se ha podido completar el registro')
                         return redirect('index')
@@ -151,11 +157,13 @@ def search_user(request):
     try:
         [df, numUsers] = searchUsers(contract_address, abi)
         reputation = []
-        for i in range(0, numUsers):
+        for i in range(1, numUsers+1):
             x = UserProfile.objects.all()
             value = x.values()[i]['reputation']
             if (value < 0):
                 reputation.append(0)
+            elif (value > 5):
+                reputation.append(5)
             else:
                 reputation.append(value)
 
@@ -173,6 +181,7 @@ def createNews(request):
     title = request.POST.get('title')
     contenido = request.POST.get('contenido')
     url = request.POST.get('url')
+    editor = request.POST.get('editor')
     private_key = request.POST.get('private_key')
     w3 = connectToBlockchain()
     if w3.isConnected() is True:
@@ -182,7 +191,7 @@ def createNews(request):
             newsTitle = ''
             if author.canPublish:
                 while title != newsTitle:
-                    add = addNews(contract_address, abi, request.user.wallet, title, request.user.org_name, private_key)
+                    add = addNews(contract_address, abi, request.user.wallet, title, editor, private_key)
                     if add:
                         news = searchNews_byName(contract_address, abi, title)
                         newsTitle = news[3]
@@ -191,15 +200,13 @@ def createNews(request):
                             try:
                                 news_model = News(newsId=news[2], title=title, content=contenido, url=url, author=author, legitima=news[5])
                                 news_model.save()
-                                if (author.reputation != 5):
-                                    author.reputation = author.reputation + 1
+                                author.reputation = author.reputation + 1
                                 author.save()
                                 newDB = News.objects.get(newsId=news[2])
                                 messages.success(request, 'La noticia se ha creado con éxito')
+                                titleDB = newDB.title
                             except Exception as e:
                                 messages.error(request, 'Se ha producido un error')
-                            finally:
-                                titleDB = newDB.title
                     else:
                         messages.error(request, 'Ha ocurrido algún problema al intentar publicar la noticia')
                         return redirect('principal')
@@ -220,24 +227,29 @@ def voteNews(request):
     id = request.POST.get('id')
     try:
         news = News.objects.get(newsId=id)
-        if news.voters == '{}':
-            news.voters = '{"voters": []}'
-        if hasVoted(request.user.orgId, news.voters):
-            messages.error(request, 'Ya has votado')
-            return redirect('readNews')
-        elif request.user == news.author:
-            messages.error(request, 'No puedes votar tu propia publicacion')
-            return redirect('principal')
-        else:
-            if (option == "0"):
-                news.votosNegativos += 1
+        if request.user.canPublish:
+            if news.voters == '{}':
+                news.voters = '{"voters": []}'
+            if hasVoted(request.user.orgId, news.voters):
+                messages.error(request, 'Ya has votado')
+                return redirect('readNews')
+            elif request.user == news.author:
+                messages.error(request, 'No puedes votar tu propia publicacion')
+                return redirect('principal')
             else:
-                news.votosPositivos += 1
-            votes = json.loads(news.voters)
-            votes["voters"].append(request.user.orgId)
-            votes_json = json.dumps(votes)
-            news.voters = votes_json
-            news.save()
+                if (option == "0"):
+                    news.votosNegativos += 1
+                else:
+                    news.votosPositivos += 1
+                votes = json.loads(news.voters)
+                votes["voters"].append(request.user.orgId)
+                votes_json = json.dumps(votes)
+                news.voters = votes_json
+                news.save()
+                messages.success(request, 'Has votado correctamente')
+                return redirect('principal')
+        else:
+            messages.error(request, 'No tienes permiso para votar')
             return redirect('principal')
     except Exception as e:
         messages.error(request, 'Ha ocurrido un error al recuperar la noticia')
@@ -246,54 +258,62 @@ def voteNews(request):
 
 def readNews(request):
     id = request.POST.get('id')
-    try:
-        news = News.objects.get(newsId=id)
-        news.visualizations += 1
-        news.save()
-        newsBlock = searchNews(contract_address, abi, int(id))
-        content = news.content
-        title = news.title
-        url = news.url
-        orgName = news.author
-        now = datetime.now()
-        res = news.created + timedelta(hours=6)
-        if ((pytz.utc.localize(now) >= res) and (news.visualizations >= 10)):
-            if ((news.votosNegativos + news.votosPositivos) != 0):
-                porcentaje = (news.votosNegativos/(news.votosPositivos+news.votosNegativos)) * 100
-                try:
-                    author = UserProfile.objects.get(org_name=news.author.org_name)
-                    if (porcentaje >= 80) and (newsBlock[5] is not False):
-                        revokeNewsStatus(contract_address, admin_address, abi, newsBlock[2], private_key)
-                        messages.info(request, 'La noticia se ha considerado fake')
-                        author.reputation = author.reputation - 2
-                        author.save()
-                    if (author.reputation == -2) and (author.canPublish is not False):
-                        revokeStatus(contract_address, admin_address, abi, author.wallet, private_key)
-                        author.canPublish = False
-                        author.save()
-                        messages.info(request, 'Se ha revocado el estado a ' + author.org_name)
-                    else:
-                        w3 = connectToBlockchain()
-                        contract = w3.eth.contract(address=contract_address, abi=abi)
-                        numNews = contract.functions.getNewsRecordsCount().call()
-                        counter = 0
-                        for i in range(100000, 100000+numNews):
-                            newsFor = searchNews(contract_address, abi, i)
-                            if newsFor[0] == author.orgId:
-                                counter = counter + 1
-                                if ((counter == 5) and (author.reputation <= 1) and (author.canPublish is not False)):
-                                    revokeStatus(contract_address, admin_address, abi, author.wallet, private_key)
-                                    author.canPublish = False
-                                    author.save()
-                                    messages.info(request, 'Se ha revocado el estado a ' + author.org_name)
-                except Exception as e:
-                    error = 'Ha ocurrido algún error al modificar la reputación del autor'
-                    return render(request, 'error.html', context={'error': error})
+    w3 = connectToBlockchain()
+    if w3.isConnected() is True:
+        try:
+            newsBlock = searchNews(contract_address, abi, int(id))
+            news = News.objects.get(newsId=id)
+            news.visualizations += 1
+            news.save()
+            content = news.content
+            title = news.title
+            url = news.url
+            orgName = news.author
+            now = datetime.now()
+            res = news.created + timedelta(hours=6)
+            if ((pytz.utc.localize(now) >= res) and (news.visualizations >= 10)):
+                if ((news.votosNegativos + news.votosPositivos) != 0):
+                    porcentaje = (news.votosNegativos/(news.votosPositivos+news.votosNegativos)) * 100
+                    try:
+                        author = UserProfile.objects.get(org_name=news.author.org_name)
+                        if (porcentaje >= 80) and (newsBlock[5] is not False):
+                            if revokeNewsStatus(contract_address, admin_address, abi, newsBlock[2], private_key):
+                                messages.info(request, 'La noticia se ha considerado fake')
+                                author.reputation = author.reputation - 2
+                                author.save()
+                            else:
+                                messages, error(request, 'Se ha producido un error al cambiar el estado de la noticia')
+                                return redirect('principal')
+                        if (author.reputation == -2) and (author.canPublish is not False):
+                            revokeStatus(contract_address, admin_address, abi, author.wallet, private_key)
+                            author.canPublish = False
+                            author.save()
+                            messages.info(request, 'Se ha revocado el estado a ' + author.org_name)
+                        else:
+                            w3 = connectToBlockchain()
+                            contract = w3.eth.contract(address=contract_address, abi=abi)
+                            numNews = contract.functions.getNewsRecordsCount().call()
+                            counter = 0
+                            for i in range(100000, 100000+numNews):
+                                newsFor = searchNews(contract_address, abi, i)
+                                if newsFor[0] == author.orgId:
+                                    counter = counter + 1
+                                    if ((counter == 5) and (author.reputation <= 1) and (author.canPublish is not False)):
+                                        revokeStatus(contract_address, admin_address, abi, author.wallet, private_key)
+                                        author.canPublish = False
+                                        author.save()
+                                        messages.info(request, 'Se ha revocado el estado a la Organización "' + author.org_name + '"')
+                    except Exception as e:
+                        error = 'Ha ocurrido algún error al modificar la reputación del autor'
+                        return render(request, 'error.html', context={'error': error})
 
-        return render(request, 'content.html', context={'content': content, 'url': url, 'org_name': orgName, 'id': id, 'title': title})
+            return render(request, 'content.html', context={'content': content, 'url': url, 'org_name': orgName, 'id': id, 'title': title})
 
-    except Exception as e:
-        error = 'Ha ocurrido algún error al recuperar la noticia o no existe dicha noticia'
+        except Exception as e:
+            error = 'Ha ocurrido algún error al recuperar la noticia o no existe dicha noticia'
+            return render(request, 'error.html', context={'error': error})
+    else:
+        error = 'El servidor no está conectado a la blockchain'
         return render(request, 'error.html', context={'error': error})
 
 
