@@ -62,6 +62,15 @@ class UserSignUpForm(forms.Form):
             }
         ))
 
+    private = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'password',
+                'class': 'form-control'
+            }
+        ))
+
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={

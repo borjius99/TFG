@@ -5,7 +5,6 @@ from FakeApp import views
 
 urlpatterns = [
     re_path(r'^$', views.index, name='index'),
-    re_path(r'^deploy/$', views.deploy_Contract, name='deploy'),
     re_path(r'^register/$', views.signup_view, name="register"),
     re_path(r'^login/$', views.login_view, name="login"),
     re_path(r'^logout/$', views.logout_view, name="logout"),

@@ -13,30 +13,40 @@
                     <h5>Enlace</h5><a href={{ url }} >{{url}}</a>
                 </div>
                 <div class="col-5">
+                    {% if estado %}
                     <div class="col-1">
                         <h5>Votar</h5>
                         <div class="row" style = "width:1000%">
                         <h12> Una vez se haya leído la noticia, elige si crees que es "Verídica" o "Falsa".</h12>
                         </div>
                     </div>
-                    <div class="col-1" style="margin-top:10px">
+                    <div class="col-1" style="margin-top:10px;width:100%">
+
                         <form action="{% url 'vote' %}" method="post">
                             {% csrf_token %}
-                            <div class>
-                                <div class>
-                                    <select id="comboType" name= "comboVote"  list="typesList">
-                                          <datalist id="typesList">
-                                              <option hidden selected value="">Opciones</option>
-                                              <option value="0">Falsa</option>
-                                              <option value="1">Verídica</option>
-                                          </datalist>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class>
+                                        <div class>
+                                            <select id="comboType" name= "comboVote"  list="typesList">
+                                                  <datalist id="typesList">
+                                                      <option hidden selected value="">Opciones</option>
+                                                      <option value="0">Falsa</option>
+                                                      <option value="1">Verídica</option>
+                                                  </datalist>
+                                        </div>
+                                        <div class = "placeholder">
+                                            <input  hidden selected id="id" name= "id"  value={{ id }}>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class = "placeholder">
-                                    <input  hidden selected id="id" name= "id"  value={{ id }}>
+                                <div class="col-2">
+                                    <button type="submit" class="btn btn-primary">Votar</button>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Votar</button>
                         </form>
+                        {% else %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

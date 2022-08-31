@@ -12,17 +12,17 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
   <link rel="stylesheet"  href="{% static "static/css/styles.css" %}"/>
 </head>
-
+<!--background={% static 'logo.png' %}-->
 <body>
   {% include "login.html" %}
   <header>
     <nav class="navbar shadow navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-          <medium>   FakeApp</medium>
+        <a class="navbar-brand" href="/" style="margin-left:30px">
+          <img src="https://i.ibb.co/VVC1WZ7/Logo-without-background-or-margins-Black.png" style="height:70px;width:180px">
         </a>
 
-        <img src="https://st.depositphotos.com/1186248/2404/i/950/depositphotos_24043595-stock-photo-fake-rubber-stamp.jpg" style="height:60px;width:85px">
+
 
         {% if not_deploy %}
 
@@ -70,25 +70,20 @@
 
       {% if not_deploy %}
 
-      <div class="container">
-          <div class="row" style="text-align:left;margin-left:40%;margin-top:30px ;width:40%">
-                  <form action="{% url 'deploy' %}" method="post">
-                      {% csrf_token %}
-
-                      <button type="submit" class="btn btn-primary" style="margin-top:5px">Desplegar contrato</button>
-                  </form>
-          </div>
-      </div>
-
       {% else %}
         {% if user.is_authenticated %}
         {% else %}
             <div class="row" style="width:80%">
                 <div class="row" style="margin-top:30px;margin-left:30px">
+                    <div class="col-5">
                     <h3><strong>Fake News</strong></h3>
+                    </div>
+                    <div class="col-5" style="text-align:center;margin-left:80px">
+                    <h3><strong>Ejemplos</strong></h3>
+                    </div>
                 </div>
                 <div class="row" style="margin-top:30px;margin-left:40px">
-                    <div class="col-7">
+                    <div class="col-6">
                         <text>
                             Las <strong>Fake News</strong> o noticias falsas, son noticias, historias, artículos, etc. engañosas, creadas para desinformar deliberadamente<br/>
                              o engañar al lector. Normalmente, las fake news suelen utilizarse para influir en las opiniones de los usuarios, marcar la agenda política
@@ -97,14 +92,25 @@
                               sobre este tipo de noticias, su evolución no cesa y continúa expandiéndose en forma de datos, imágenes e incluso vídeos.
                         </text>
                     </div>
-                    <div class="col-3">
-                        <!--<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz_O30uzd0hByJ5pGi3bUMPBGbqGtjwucAbg&usqp=CAU" style="margin-left: 150px;border: 3px solid black;border-radius: 10px;overflow-x:hidden">-->
+                    <div class="col-2">
+                        <img src="https://i.ibb.co/VVC1WZ7/Logo-without-background-or-margins-Black.png" style="margin-left:-320px;margin-top:180px">
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <a href="https://maldita.es/malditobulo/20220826/rajoy-fraga-narcotraficantes-foto-mafia-gallega/">Mariano Rajoy y Manuel Fraga, amigos de narcotraficantes</a>
+                        </div>
+                        <div class="row">
+                            <a href="https://www.lasexta.com/programas/al-rojo-vivo/entrevistas/abascal-insiste-en-vincular-inmigracion-y-violaciones-en-grupo-newtral-explica-por-que-esto-es-falso_202002145e469a300cf285e6aac2c259.html">Abascal insiste en vincular inmigracion y violaciones</a>
+                        </div>
+                        <div class="row">
+                            <a href="https://www.20minutos.es/noticia/5029091/0/bulos-y-desinformaciones-sobre-el-precio-de-la-gasolina-y-otros-combustibles-que-te-estan-intentando-colar/">Fake news sobre el precio de la gasolina</a>
+                        </div>
                     </div>
                 </div>
-                <div class="row" style="margin-top:30px;margin-left:30px">
+                <div class="row" style="margin-top:-100px;margin-left:30px">
                     <h3><strong>Proyectos</strong></h3>
                 </div>
-                <div class="row" style="margin-top:30px;margin-left:40px">
+                <div class="row" style="margin-top:-50px;margin-left:40px">
                     <h5><strong>Maldita</strong></h5>
                     <h7>   <a href="https://maldita.es/" ><strong>Maldita.es</strong></a> es un medio de comunicación español constituido
                         como fundación</br> sin ánimo de lucro dedicado al fact checking.

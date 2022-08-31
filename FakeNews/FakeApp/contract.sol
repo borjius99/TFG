@@ -19,10 +19,9 @@ contract owned {
 }
 
 contract fightFakeNews is owned{
-
+    uint public gasfee;
     uint public sizeORG;
     uint public sizeRealNews;
-    uint public gasfee;
     uint newsIDstart;
     uint orgIDstart;
 
@@ -47,9 +46,8 @@ contract fightFakeNews is owned{
     organizations[] organizationsRecords;
     news[] newRecords;
 
-    // constructor
 
-    function fightFakeNews () public{
+    function fightFakeNews() public{
         gasfee=0;
         newsIDstart =100000;
         orgIDstart =0;
@@ -70,7 +68,7 @@ contract fightFakeNews is owned{
         return organizationsRecords.length;
         }
 
-    // Add record by check also the ID (no duplicate IDs)
+    // add news
 
     function addRealNews(string _newsTitle, string _publisher) public payable returns(uint) {
         require(msg.value==gasfee * 10 ** 15);
@@ -99,7 +97,7 @@ contract fightFakeNews is owned{
 
 
 
-    // get number of records
+
 
     function getOrgRecordsCount() public constant returns(uint) {
         return organizationsRecords.length;
@@ -109,7 +107,7 @@ contract fightFakeNews is owned{
         return newRecords.length;
     }
 
-    // search for news using ID
+
 
     function searchNews(uint _searchNews) public constant returns(uint, string, uint, string, string, bool){
     uint index =0;
@@ -122,7 +120,7 @@ contract fightFakeNews is owned{
     return (newRecords[index].orgIDforNews, newRecords[index].orgNameforNews, newRecords[index].newsID, newRecords[index].newsTitle, newRecords[index].publisher, newRecords[index].status);
     }
 
-    // search for org using ID
+
 
     function searchORG(uint _seachOrg) public constant returns(address, uint, string, string, bool){
     uint index =0;
@@ -135,9 +133,7 @@ contract fightFakeNews is owned{
     return (organizationsRecords[index].orgAddress, organizationsRecords[index].orgID, organizationsRecords[index].organizationName, organizationsRecords[index].orgSource, organizationsRecords[index].status);
     }
 
-    // return table
 
-    // search for org using ID
 
     function returnORGarraywithNews(uint _seachOrg) public constant returns(uint[]){
     uint index =0;
@@ -152,9 +148,7 @@ contract fightFakeNews is owned{
 
 
 
-    // Advanced functions
 
-    // change status of News
 
     function changeStatusofNews(uint _newsID, bool _revokestatus) public payable{
     require(msg.sender==owner);
@@ -168,7 +162,7 @@ contract fightFakeNews is owned{
 
     }
 
-    // changes status of Org
+
 
     function changeStatusofORGs(uint _orgID, bool _revokestatus) public payable{
     require(msg.sender==owner);

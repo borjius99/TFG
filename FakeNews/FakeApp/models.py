@@ -48,10 +48,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     org_name = models.CharField(max_length=100, unique=True)
     org_source = models.CharField(max_length=100, default='')
     wallet = models.CharField(max_length=100, unique=True)
-    reputation = models.IntegerField(default=0, validators=[
-        MaxValueValidator(5),
-        MinValueValidator(-2)
-    ])
+    reputation = models.IntegerField(default=0)
     canPublish = models.BooleanField(default=True)
 
     is_staff = models.BooleanField(default=False)
