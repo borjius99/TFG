@@ -101,28 +101,27 @@ def signup_view(request):
             else:
                 password = signup_form.cleaned_data.get('password')
                 count = getOrgCount(contract_address, abi)
-                walletOrg = ''
-                while wallet != walletOrg:
-                    try:
-                        user = get_user_model().objects.create(
-                            orgId=count,
-                            email=email,
-                            org_name=org_name,
-                            org_source=org_source,
-                            wallet=wallet,
-                            password=make_password(password),
-                            is_active=True
-                        )
-                        userDb = UserProfile.objects.get(wallet=wallet)
-                        if userDb.wallet is not None:
-                            while wallet != walletOrg:
-                                add = addOrganization(contract_address, abi, private, wallet, org_name, org_source)
-                                if add:
-                                    org = searchOrg_byAddress(contract_address, abi, wallet)
-                                    walletOrg = org[0]
-                    except Exception as e:
-                        messages.error(request, 'Se ha producido un problema en el registro')
-                        return redirect('index')
+                try:
+                    user = get_user_model().objects.create(
+                        orgId=count,
+                        email=email,
+                        org_name=org_name,
+                        org_source=org_source,
+                        wallet=wallet,
+                        password=make_password(password),
+                        is_active=True
+                    )
+                    userDb = UserProfile.objects.get(wallet=wallet)
+                    if userDb.wallet is not None:
+                        add = addOrganization(contract_address, abi, private, wallet, org_name, org_source)
+                        if add:
+                            org = searchOrg_byAddress(contract_address, abi, wallet)
+                        else:
+                            userDb.delete()
+                            raise
+                except Exception as e:
+                    messages.error(request, 'Se ha producido un problema en el registro')
+                    return redirect('index')
 
             login(request, user)
             messages.success(request, 'Registro completado con éxito')
@@ -170,28 +169,28 @@ def createNews(request):
         aux = searchNews_byName(contract_address, abi, title)
         if aux is None:
             author = UserProfile.objects.get(org_name=request.user.org_name)
-            newsTitle = ''
             if author.canPublish:
                 count = getNewsCount(contract_address, abi)
-                while title != newsTitle:
-                    try:
-                        news_model = News(newsId=100000+count, title=title, content=contenido, url=url, author=author, legitima=True)
-                        news_model.save()
-                        newDB = News.objects.get(title=title)
-                        if newDB.title is not None:
-                            while title != newsTitle:
-                                add = addNews(contract_address, abi, request.user.wallet, title, editor, private_key)
-                                if add:
-                                    if author.reputation >= 5:
-                                        author.reputation = author.reputation
-                                    else:
-                                        author.reputation = author.reputation + 1
-                                    author.save()
-                                    news = searchNews_byName(contract_address, abi, title)
-                                    newsTitle = news[3]
-                    except Exception as e:
-                        messages.error(request, 'Ha ocurrido algún problema al intentar publicar la noticia')
-                        return redirect('principal')
+                try:
+                    news_model = News(newsId=100000+count, title=title, content=contenido, url=url, author=author, legitima=True)
+                    news_model.save()
+                    newDB = News.objects.get(title=title)
+                    if newDB.title is not None:
+                        add = addNews(contract_address, abi, request.user.wallet, title, editor, private_key)
+                        if add:
+                            if author.reputation >= 5:
+                                author.reputation = author.reputation
+                            else:
+                                author.reputation = author.reputation + 1
+                            author.save()
+                            news = searchNews_byName(contract_address, abi, title)
+                            newsTitle = news[3]
+                        else:
+                            newDB.delete()
+                            raise
+                except Exception as e:
+                    messages.error(request, 'Ha ocurrido algún problema al intentar publicar la noticia')
+                    return redirect('principal')
 
                 messages.success(request, 'La noticia se ha creado con éxito')
                 return redirect('principal')
