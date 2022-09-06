@@ -126,6 +126,9 @@ def signup_view(request):
             login(request, user)
             messages.success(request, 'Registro completado con éxito')
             return redirect('principal')
+        else:
+            messages.error(request, 'Se ha producido un problema en el registro')
+            return redirect('index')
     else:
         error = 'El servidor no está conectado a la blockchain'
         return render(request, 'error.html', context={'error': error})
