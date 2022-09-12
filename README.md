@@ -12,22 +12,14 @@ El código ubicado en este repositorio es el perteneciente a la aplicación web 
 ## Estructura de carpetas
 
 FakeNews: Carpeta del proyecto.
-	|
-	|__ FakeApp: Carpeta de la App.
-	|		
-	|__ FakeNews: Carpeta con archivos de configuración del proyecto.
-	|
-	|__ FakeApp_userprofile
-	|
-	|__ compiled_code.json: Fichero creado al compilar el contrato.
-	|
-	|__ db.sqlite3: Base de datos.
-	|
-	|__ manage.py: Script para la creación de aplicaciones, trabajar con bases de datos y empezar el desarrollo del servidor web.
-	|
-	|__ pushContract.py: Script para desplegar el contrato
-	|
-	|__ script.sh: Script para la creación del usuario administrador de la aplicación
+	 - FakeApp: Carpeta de la App.
+	 - FakeNews: Carpeta con archivos de configuración del proyecto.
+	 - FakeApp_userprofile
+	 - compiled_code.json: Fichero creado al compilar el contrato.
+	 - db.sqlite3: Base de datos.
+	 - manage.py: Script para la creación de aplicaciones, trabajar con bases de datos y empezar el desarrollo del servidor web.
+	 - pushContract.py: Script para desplegar el contrato
+	 - script.sh: Script para la creación del usuario administrador de la aplicación
 
 
 Dentro de la carpeta FakeApp se encuentran los ficheros y carpetas correspondientes a la aplicación, entre ellos se puede destacar:
@@ -51,15 +43,15 @@ Dentro de la carpeta FakeApp se encuentran los ficheros y carpetas correspondien
 
 3.- En el fichero /FakeNews/pushContract.py, introducir en las variables "private_key" y "admin_address", la clave privada y la dirección de una cuentra registrada en la blockchain, será la cuenta administradora. La clave debe empezar por '0x'. Luego ejecutar en el directorio "/FakeNews" para desplegar el contrato:
 
-	```bash
+
 	python3 pushContract.py
-	```
+
 
 4.- Para iniciar el servidor, en el fichero /FakeNews/FakeApp/views.py introducir las variables "private_key", "admin_address" y "contract_address". Las dos primeras se corresponden a las mencionadas anteriormente, y la última a la dirección del contrato desplegado. Una vez hecho esto, ejecutar en el directorio "/FakeNews":
 
-	```bash
+	
 	python3 manage.py runserver
-	```
+
 
 
 5.- La URL de la página web se encuentra en "http://127.0.0.1:8000/FakeApp/"
