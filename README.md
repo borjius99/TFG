@@ -11,7 +11,7 @@ El código ubicado en este repositorio es el perteneciente a la aplicación web 
 
 ## Estructura de carpetas
 
-FakeNews: Carpeta del proyecto.
+ - FakeNews: Carpeta del proyecto.
 	 - FakeApp: Carpeta de la App.
 	 - FakeNews: Carpeta con archivos de configuración del proyecto.
 	 - FakeApp_userprofile
@@ -49,7 +49,7 @@ Dentro de la carpeta FakeApp se encuentran los ficheros y carpetas correspondien
 
 4.- Para iniciar el servidor, en el fichero /FakeNews/FakeApp/views.py introducir las variables "private_key", "admin_address" y "contract_address". Las dos primeras se corresponden a las mencionadas anteriormente, y la última a la dirección del contrato desplegado. Una vez hecho esto, ejecutar en el directorio "/FakeNews":
 
-	
+
 	python3 manage.py runserver
 
 
