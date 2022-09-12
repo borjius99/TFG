@@ -42,7 +42,7 @@ class CustomAccountManager(BaseUserManager):
 
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
-    orgId = models.IntegerField(unique=True, blank=True)
+    orgId = models.IntegerField(unique=True, default=-1)
     email = models.EmailField(_('email address'), unique=True)
     org_name = models.CharField(max_length=100, unique=True)
     org_source = models.CharField(max_length=100, default='')
@@ -70,7 +70,7 @@ class News(models.Model):
     newsId = models.IntegerField(unique=True)
     title = models.CharField(max_length=50)
     content = models.TextField()
-    url = models.URLField(max_length=200, default='')
+    url = models.URLField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     votosPositivos = models.IntegerField(default=0)

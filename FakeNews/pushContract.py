@@ -2,8 +2,8 @@ from web3 import Web3
 import json
 from solcx import compile_standard, install_solc
 
-private_key = '0x5b371b16a0877fd36b94186199b0a3a21babc557494d912da9120a589eee2884'
-admin_address = '0x6fe59F29b094b4C7845267A2d130Ad584E4Db4FA'
+private_key = ''
+admin_address = ''
 
 
 w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545'))
